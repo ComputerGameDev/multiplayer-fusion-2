@@ -33,6 +33,13 @@ public class Ball : NetworkBehaviour
 
         if (health != null && hitPlayer != null)
         {
+            // Check if the player has an active shield
+            if (health.IsShieldActive())
+            {
+                Debug.Log($"{hitPlayer.name} is shielded. No damage or score awarded.");
+                return; // Skip further processing if the shield is active
+            }
+
             // Reduce the health of the player who was hit
             health.DealDamageRpc(damagePerHit);
 
@@ -49,9 +56,7 @@ public class Ball : NetworkBehaviour
                     }
                 }
             }
-
-            // Despawn the ball after a successful hit
-            Runner.Despawn(Object);
         }
     }
+
 }

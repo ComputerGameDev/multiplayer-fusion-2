@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using System.Collections;
 
 public class Health: NetworkBehaviour
 {
@@ -10,6 +11,13 @@ public class Health: NetworkBehaviour
 
     // Migration from Fusion 1:  https://doc.photonengine.com/fusion/current/getting-started/migration/coming-from-fusion-v1
     private ChangeDetector _changes;
+
+    [Networked] private bool isShieldActive { get; set; } = false; // Track shield state
+
+    public bool IsShieldActive()
+    {
+        return isShieldActive;
+    }
 
     public override void Spawned() {
         _changes = GetChangeDetector(ChangeDetector.Source.SimulationState);
@@ -35,4 +43,21 @@ public class Health: NetworkBehaviour
         Debug.Log("Received DealDamageRpc on StateAuthority, modifying Networked variable");
         NetworkedHealth -= damage;
     }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void ActivateShieldRpc(float duration)
+    {
+        StartCoroutine(ShieldDuration(duration));
+    }
+
+    private IEnumerator ShieldDuration(float duration)
+    {
+        isShieldActive = true;
+        Debug.Log("Shield activated!");
+        yield return new WaitForSeconds(duration);
+        isShieldActive = false;
+        Debug.Log("Shield expired!");
+    }
+
+
 }

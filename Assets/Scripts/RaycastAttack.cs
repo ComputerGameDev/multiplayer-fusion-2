@@ -38,23 +38,33 @@ public class RaycastAttack : NetworkBehaviour {
     public override void FixedUpdateNetwork() {
         if (!HasStateAuthority)  return;
 
-        if (_attackPressed) {
+        if (_attackPressed)
+        {
             Vector2 attackLocationInScreenCoordinates = attackLocation.ReadValue<Vector2>();
-
             var camera = Camera.main;
             Ray ray = camera.ScreenPointToRay(attackLocationInScreenCoordinates);
             ray.origin += camera.transform.forward;
 
             Debug.DrawRay(ray.origin, ray.direction * shootDistance, Color.red, duration: 1f);
 
-            if (Runner.GetPhysicsScene().Raycast(ray.origin, ray.direction * shootDistance, out var hit)) {
+            if (Runner.GetPhysicsScene().Raycast(ray.origin, ray.direction, out var hit, shootDistance))
+            {
                 GameObject hitObject = hit.transform.gameObject;
-                Debug.Log("Raycast hit: name="+ hitObject.name+" tag="+hitObject.tag+" collider="+hit.collider);
-                if (hitObject.TryGetComponent<Health>(out var health)) {
+                Debug.Log($"Raycast hit: {hitObject.name}");
+
+                if (hitObject.TryGetComponent<Health>(out var health))
+                {
+                    if (health.IsShieldActive())
+                    {
+                        Debug.Log($"{hitObject.name} is shielded. No damage dealt.");
+                        return; // Skip damage if shield is active
+                    }
+
                     Debug.Log("Dealing damage");
                     health.DealDamageRpc(Damage);
                 }
             }
+
             _attackPressed = false;
         }
     }
