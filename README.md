@@ -52,5 +52,5 @@ This is a multiplayer game built with Fusion that allows players to compete in r
 4. Avoid taking damage to maintain your score advantage.
 
 ## Play Online
-You can play the game online on [Itch.io](https://example.itch.io/game).
+You can play the game online on [Itch.io](https://tomgoz.itch.io/multiplayer-fusion-game).
 
