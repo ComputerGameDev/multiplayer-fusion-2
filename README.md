@@ -54,9 +54,3 @@ This is a multiplayer game built with Fusion that allows players to compete in r
 ## Play Online
 You can play the game online on [Itch.io](https://example.itch.io/game).
 
-## References
-- [Fusion Documentation](https://doc.photonengine.com/fusion/current/getting-started/introduction) for networking logic.
-- Unity Asset Store for game assets and models.
-
----
-Enjoy the game and may the best player win!
